@@ -1,1 +1,49 @@
+import java.util.*;
+class quad{
+    public static void main(string args []){
+        int a,b,c;
+        double d, r1=0, r2=0;
+        Scanner in = new Scanner(System.in);
 
+        System.out.print("Enter a:");
+        a=in.nextInt();
+
+        System.out.print("Enter b:");
+        b=in.nextInt();
+
+        System.out.print("Enter c:");
+        c=in.nextInt();
+
+        d = (b*b)-(4*a*c);
+
+        if(d<0){
+            System.out.println("There are no real solutions");
+
+        }else if(d>0){
+            r1 = ((-b)+Math.sqrt(d))/(2*a);
+            r2 = ((-b)-Math.sqrt(d))/(2*a);
+            System.out.println("Roots are real and distinct:"+"("+r1+","+r2+")");
+
+        }else{
+            r1=(-b)/(2*a);
+            r2=r1;
+            System.out.println("Roots are real and equal:"+"("+r1+","+r2")");
+        }
+    }
+}
+
+OUTPUT:-
+Enter a: 1
+Enter b: 5
+Enter c: 6
+Roots are real and distinct:(-2.0,-3.0)
+
+Enter a: 1
+Enter b: 4
+Enter c: 5
+There are no real solutions
+
+Enter a: 1
+Enter b: -4
+Enter c: 4
+Roots are real and equal:(2.0,2.0)

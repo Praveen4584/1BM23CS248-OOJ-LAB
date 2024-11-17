@@ -1,1 +1,58 @@
+abstract class Shape {
+    int length;  
+    int width;  
 
+    void printArea() {
+    }
+}
+
+class Rectangle extends Shape {
+    public Rectangle(int length, int width) {
+        this.length = length;
+        this.width = width;
+        printArea();
+    }
+
+    void printArea() {
+        int area = length * width;
+        System.out.println("Area of Rectangle: " + area);
+    }
+}
+
+class Triangle extends Shape {
+    public Triangle(int base, int height) {
+        this.length = base;   
+        this.width = height;  
+        printArea();  
+    }
+
+    void printArea() {
+        double area = 0.5 * length * width;
+        System.out.println("Area of Triangle: " + area);
+    }
+}
+
+class Circle extends Shape {
+    public Circle(int radius) {
+        this.length = radius;  
+        printArea();  
+    }
+
+    void printArea() {
+        double area = Math.PI * length * length;  
+        System.out.println("Area of Circle: " + area);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Shape rectangle = new Rectangle(5,8);
+        Shape triangle = new Triangle(8,10);
+        Shape circle = new Circle(9);
+    }
+}
+
+OUTPUT:-
+Area of Rectangle: 50
+Area of Triangle: 16.0
+Area of Circle: 153.93804002589985

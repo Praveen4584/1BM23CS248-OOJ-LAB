@@ -1,1 +1,254 @@
+import java.util.Scanner;
 
+abstract class Account {
+    protected String customerName;
+    protected String accountNumber;
+    protected String accountType;
+    protected double balance;
+
+    public Account(String customerName, String accountNumber, String accountType) {
+        this.customerName = customerName;
+        this.accountNumber = accountNumber;
+        this.accountType = accountType;
+        this.balance = 0.0;
+    }
+
+    public void deposit(double amount) {
+        if (amount > 0) {
+            balance += amount;
+            System.out.println("Deposited: " + amount);
+        } else {
+            System.out.println("Deposit amount must be positive.");
+        }
+    }
+
+    public void displayBalance() {
+        System.out.println("Current Balance: " + balance);
+    }
+
+    public abstract void withdraw(double amount);
+}
+
+class SavAcct extends Account {
+    private double interestRate;
+
+    public SavAcct(String customerName, String accountNumber, double interestRate) {
+        super(customerName, accountNumber, "Savings");
+        this.interestRate = interestRate;
+    }
+
+    public void computeInterest() {
+        double interest = balance * (interestRate / 100);
+        deposit(interest);
+        System.out.println("Interest of " + interest + " deposited.");
+    }
+
+    @Override
+    public void withdraw(double amount) {
+        if (amount > 0 && amount <= balance) {
+            balance -= amount;
+            System.out.println("Withdrawn: " + amount);
+        } else {
+            System.out.println("Insufficient balance or invalid withdrawal amount.");
+        }
+    }
+}
+
+class CurAcct extends Account {
+    private double minimumBalance;
+    private double serviceCharge;
+
+    public CurAcct(String customerName, String accountNumber, double minimumBalance, double serviceCharge) {
+        super(customerName, accountNumber, "Current");
+        this.minimumBalance = minimumBalance;
+        this.serviceCharge = serviceCharge;
+    }
+
+    @Override
+    public void withdraw(double amount) {
+        if (amount > 0 && amount <= balance) {
+            balance -= amount;
+            System.out.println("Withdrawn: " + amount);
+            checkMinimumBalance();
+        } else {
+            System.out.println("Insufficient balance or invalid withdrawal amount.");
+        }
+    }
+
+    private void checkMinimumBalance() {
+        if (balance < minimumBalance) {
+            balance -= serviceCharge;
+            System.out.println("Minimum balance breached. Service charge of " + serviceCharge + " imposed.");
+        }
+    }
+}
+
+public class Bank {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.println("Enter account type (savings/current): ");
+        String type = scanner.nextLine();
+        
+        System.out.println("Enter customer name: ");
+        String name = scanner.nextLine();
+        
+        System.out.println("Enter account number: ");
+        String accNumber = scanner.nextLine();
+
+        Account account;
+        if (type.equalsIgnoreCase("savings")) {
+            System.out.println("Enter interest rate: ");
+            double interestRate = scanner.nextDouble();
+            account = new SavAcct(name, accNumber, interestRate);
+        } else {
+            System.out.println("Enter minimum balance: ");
+            double minBalance = scanner.nextDouble();
+            System.out.println("Enter service charge: ");
+            double serviceCharge = scanner.nextDouble();
+            account = new CurAcct(name, accNumber, minBalance, serviceCharge);
+        }
+
+        boolean exit = false;
+        while (!exit) {
+            System.out.println("\n1. Deposit\n2. Withdraw\n3. Display Balance\n4. Compute Interest (for Savings)\n5. Exit");
+            int choice = scanner.nextInt();
+            switch (choice) {
+                case 1:
+                    System.out.println("Enter deposit amount: ");
+                    double depositAmount = scanner.nextDouble();
+                    account.deposit(depositAmount);
+                    break;
+                case 2:
+                    System.out.println("Enter withdrawal amount: ");
+                    double withdrawAmount = scanner.nextDouble();
+                    account.withdraw(withdrawAmount);
+                    break;
+                case 3:
+                    account.displayBalance();
+                    break;
+                case 4:
+                    if (account instanceof SavAcct) {
+                        ((SavAcct) account).computeInterest();
+                    } else {
+                        System.out.println("Interest computation is only for savings accounts.");
+                    }
+                    break;
+                case 5:
+                    exit = true;
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+        
+        scanner.close();
+    }
+}
+
+
+OUTPUT:- 1
+Current Account
+Enter account type (savings/current): 
+Current
+Enter customer name: 
+Ishwar 
+Enter account number: 
+2003586923
+Enter minimum balance: 
+5000
+Enter service charge: 
+1000
+
+1. Deposit
+2. Withdraw
+3. Display Balance
+4. Compute Interest (for Savings)
+5. Exit
+1
+Enter deposit amount: 
+50000
+Deposited: 50000.0
+
+1. Deposit
+2. Withdraw
+3. Display Balance
+4. Compute Interest (for Savings)
+5. Exit
+3
+Current Balance: 50000.0
+
+1. Deposit
+2. Withdraw
+3. Display Balance
+4. Compute Interest (for Savings)
+5. Exit
+2
+Enter withdrawal amount: 
+25000
+Withdrawn: 25000.0
+
+1. Deposit
+2. Withdraw
+3. Display Balance
+4. Compute Interest (for Savings)
+5. Exit
+3
+Current Balance: 25000.0
+
+
+OUTPUT:- 2 
+Savings Account
+Enter account type (savings/current): 
+savings
+Enter customer name: 
+Rajesh 
+Enter account number: 
+125678901
+Enter interest rate: 
+2
+
+1. Deposit
+2. Withdraw
+3. Display Balance
+4. Compute Interest (for Savings)
+5. Exit
+1
+Enter deposit amount: 
+25000
+Deposited: 25000.0
+
+1. Deposit
+2. Withdraw
+3. Display Balance
+4. Compute Interest (for Savings)
+5. Exit
+3
+Current Balance: 25000.0
+
+1. Deposit
+2. Withdraw
+3. Display Balance
+4. Compute Interest (for Savings)
+5. Exit
+2
+Enter withdrawal amount: 
+5000
+Withdrawn: 5000.0
+
+1. Deposit
+2. Withdraw
+3. Display Balance
+4. Compute Interest (for Savings)
+5. Exit
+4
+Deposited: 400.0
+Interest of 400.0 deposited.
+
+1. Deposit
+2. Withdraw
+3. Display Balance
+4. Compute Interest (for Savings)
+5. Exit
+3
+Current Balance: 20400.0
